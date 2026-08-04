@@ -22,7 +22,7 @@ Ao longo das fases, o estudante desenvolverá conhecimentos em programação, ba
 
 ---
 
-# 👨‍💻 Público-Alvo
+# 👨‍💻 Público-alvo
 
 Esta trilha é indicada para:
 
