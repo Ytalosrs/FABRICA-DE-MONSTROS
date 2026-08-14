@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #0b0f19;
+  color: #ffffff;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Atmosfera Zello — brilhos radiais laranja sobre o preto profundo.
+   Dá profundidade e faz o blur do glassmorphism ser perceptível. */
+.app-atmosphere {
+  background-color: #0b0f19;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(255, 107, 0, 0.16), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 90% 20%, rgba(245, 158, 11, 0.08), transparent 45%),
+    radial-gradient(ellipse 50% 50% at 50% 100%, rgba(255, 107, 0, 0.07), transparent 50%);
+  background-attachment: fixed;
+}
+
+/* Orbes de fundo animados — brilhos coloridos borrados que flutuam
+   lentamente, dando um fundo "vivo" e desfocado. */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  will-change: transform;
+}
+@keyframes orbFloatA {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(7%, -9%) scale(1.12); }
+}
+@keyframes orbFloatB {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-8%, 7%) scale(1.15); }
+}
+@keyframes orbFloatC {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6%, 8%) scale(0.9); }
+}
+.orb-a { animation: orbFloatA 22s ease-in-out infinite; }
+.orb-b { animation: orbFloatB 28s ease-in-out infinite; }
+.orb-c { animation: orbFloatC 25s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .orb-a, .orb-b, .orb-c { animation: none; }
+}
+
+/* Painel de vidro (glassmorphism) — padrão de cards/modais Zello. */
+.glass-panel {
+  background: rgba(22, 27, 40, 0.72);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Marca d'água "zello" repetida (fundo da tela de login). */
+.zello-watermark {
+  background-image: url('/zello-wordmark.svg');
+  background-repeat: repeat;
+  background-size: 200px auto;
+}
+
+/* Scrollbar Zello */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 8px;
+  border: 2px solid #0b0f19;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff6b00;
+}
+
+/* Foco visível e acessível para chão de fábrica */
+*:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 2px;
+}

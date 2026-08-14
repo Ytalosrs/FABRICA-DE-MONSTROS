@@ -1,0 +1,27 @@
+rules_version = '2';
+
+// =====================================================================
+// REGRAS DE SEGURANÇA — Firebase Storage ("FORMAÇÃO DE TALENTOS")
+// - Leitura: qualquer colaborador @zello.tec.br autenticado.
+// - Escrita (upload/exclusão): apenas ADMINS (claim admin=true).
+// - Limite de 200 MB por arquivo.
+// =====================================================================
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isCorporate() {
+      return request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email.matches('^[^@]+@zello[.]tec[.]br$');
+    }
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    match /{allPaths=**} {
+      allow read: if isCorporate();
+      allow write: if isAdmin() && request.resource.size < 200 * 1024 * 1024;
+    }
+  }
+}

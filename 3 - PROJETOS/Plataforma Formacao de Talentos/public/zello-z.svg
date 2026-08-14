@@ -1,0 +1,7 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zello">
+  <g fill="#FFFFFF">
+    <path d="M20 18 H80 a4 4 0 0 1 4 4 V32 a4 4 0 0 1 -4 4 H20 a4 4 0 0 1 -4 -4 V22 a4 4 0 0 1 4 -4 Z"/>
+    <path d="M20 64 H80 a4 4 0 0 1 4 4 V78 a4 4 0 0 1 -4 4 H20 a4 4 0 0 1 -4 -4 V68 a4 4 0 0 1 4 -4 Z"/>
+    <path d="M66 20 L84 32 L34 80 L16 68 Z"/>
+  </g>
+</svg>

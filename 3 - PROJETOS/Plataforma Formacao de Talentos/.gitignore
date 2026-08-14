@@ -1,0 +1,36 @@
+# Dependências
+node_modules/
+
+# Build
+dist/
+dist-ssr/
+
+# Variáveis de ambiente (NUNCA versionar — contêm as chaves do Firebase)
+.env
+.env.local
+.env.*.local
+
+# Firebase
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+
+# Chave de serviço do Admin SDK (NUNCA versionar — acesso total ao projeto)
+serviceAccountKey.json
+*-firebase-adminsdk-*.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editores / SO
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Cache
+*.local

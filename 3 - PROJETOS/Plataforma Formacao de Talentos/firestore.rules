@@ -1,0 +1,82 @@
+rules_version = '2';
+
+// =====================================================================
+// REGRAS DE SEGURANÇA — Firestore ("FORMAÇÃO DE TALENTOS")
+// - Só usuários @zello.tec.br autenticados acessam dados.
+// - ADMIN = campo `admin: true` no próprio documento users/{uid}.
+//   (assim um admin pode promover/rebaixar outros pela interface)
+// - Um usuário comum NÃO pode se autopromover a admin.
+// =====================================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isCorporateEmail() {
+      return isSignedIn()
+        && request.auth.token.email != null
+        && request.auth.token.email.matches('^[^@]+@zello[.]tec[.]br$');
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Admin = documento do próprio usuário tem admin==true.
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+    }
+
+    // O campo `admin` continua igual ao que já estava (owner não muda).
+    // Usa .get(...,false) para funcionar mesmo quando o campo não existe.
+    function adminNaoMudou() {
+      return request.resource.data.get('admin', false) == resource.data.get('admin', false);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- users ---
+    match /users/{uid} {
+      allow read: if isCorporateEmail();
+      // Auto-cadastro: só o próprio, com o próprio e-mail, e SEM se tornar admin.
+      allow create: if isAdmin()
+        || (isCorporateEmail() && isOwner(uid)
+            && request.resource.data.email == request.auth.token.email
+            && request.resource.data.admin != true);
+      // Update: admin edita qualquer um; dono edita o próprio SEM mexer no admin.
+      allow update: if isAdmin()
+        || (isCorporateEmail() && isOwner(uid) && adminNaoMudou());
+      allow delete: if isAdmin();
+    }
+
+    // --- tracks --- (catálogo: leitura para todos; escrita só admin)
+    match /tracks/{trackId} {
+      allow read: if isCorporateEmail();
+      allow write: if isAdmin();
+    }
+
+    // --- user_progress ---
+    match /user_progress/{progressId} {
+      allow read: if isCorporateEmail();
+      allow create, update: if isAdmin()
+        || (isCorporateEmail() && request.resource.data.userId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+
+    // --- mentorships ---
+    match /mentorships/{mentorshipId} {
+      allow read: if isCorporateEmail();
+      allow create, update: if isAdmin()
+        || (isCorporateEmail()
+            && (request.resource.data.mentorId == request.auth.uid
+                || request.resource.data.menteeId == request.auth.uid));
+      allow delete: if isAdmin();
+    }
+  }
+}
